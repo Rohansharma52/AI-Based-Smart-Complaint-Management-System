@@ -1,7 +1,13 @@
 import axios from 'axios'
 
+// Production: VITE_API_URL env variable use hoga
+// Development: Vite proxy /api use karega
+const API_BASE = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api'
+
 const API = axios.create({
-  baseURL: '/api',
+  baseURL: API_BASE,
   timeout: 30000,
   headers: { 'Content-Type': 'application/json' }
 })

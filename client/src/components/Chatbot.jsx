@@ -40,7 +40,8 @@ export default function Chatbot() {
     setLoading(true)
     try {
       const token = localStorage.getItem('complaint_token')
-      const res = await axios.post('/api/chat/message', { message: msg, sessionId: SESSION_ID },
+      const baseURL = import.meta.env.VITE_API_URL || ''
+      const res = await axios.post(`${baseURL}/api/chat/message`, { message: msg, sessionId: SESSION_ID },
         { headers: token ? { Authorization: `Bearer ${token}` } : {} })
       const reply = res.data.reply
       setMessages(prev => [...prev, { role: 'bot', text: reply, time: new Date() }])
@@ -98,7 +99,9 @@ export default function Chatbot() {
             </div>
             <div className="flex gap-1">
               <button onClick={async () => {
-                try { await axios.post('/api/chat/clear', { sessionId: SESSION_ID }, { headers: { Authorization: `Bearer ${localStorage.getItem('complaint_token')}` } }) } catch {}
+                try { 
+                const baseURL = import.meta.env.VITE_API_URL || ''
+                await axios.post(`${baseURL}/api/chat/clear`, { sessionId: SESSION_ID }, { headers: { Authorization: `Bearer ${localStorage.getItem('complaint_token')}` } }) } catch {}
                 setMessages([{ role:'bot', text:'Chat cleared! How can I help you? 😊', time: new Date() }])
               }} className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 border border-white/8 text-slate-500 hover:text-slate-300 text-xs flex items-center justify-center transition-all" title="Clear">
                 🗑️
